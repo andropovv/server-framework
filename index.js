@@ -1,5 +1,6 @@
 const http = require('http');
 const EventEmitter = require('events')
+const mongoose = require('mongoose')
 const Application = require('./framework/Application');
 const router = require('./src/user-router');
 const jsonParser = require('./framework/parseJson');
@@ -15,9 +16,19 @@ app.use(bodyParser);
 app.use(urlParser('http://localhost:' + PORT));
 
 app.addRouter(router)
-app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
-})
+
+
+const start = async () => {
+    try {
+        await mongoose.connect()
+        console.log('MongoDB Connected');
+        app.listen(PORT, () => {
+            console.log(`Listening on port ${PORT}`);
+        })
+    } catch (e) {
+        console.error(e);
+    }
+}
 
 
 
